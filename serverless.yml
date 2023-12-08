@@ -22,7 +22,7 @@ functions:
     events:
       - http:
           path: /login
-          method: get
+          method: post
   profile:
     handler: services/profile/main.handler
     events:
@@ -40,6 +40,21 @@ functions:
       - http:
           path: /signup
           method: post
+  verifySignup:
+    handler: services/confirm_signup.handler
+    timeout: 30
+    events:
+      - http:
+          path: /verify
+          method: post
+  resendVerification:
+    handler: services/resend_verification_code.handler
+    timeout: 30
+    events:
+      - http:
+          path: /resend
+          method: post
+
 resources:
   Resources:
     UserPool:
@@ -52,7 +67,7 @@ resources:
             Mutable: true
         Policies:
           PasswordPolicy:
-            MinimumLength: 6
+            MinimumLength: 8
         AutoVerifiedAttributes: ["email"]
     UserClient:
       Type: AWS::Cognito::UserPoolClient
