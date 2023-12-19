@@ -23,6 +23,7 @@ functions:
       - http:
           path: /login
           method: post
+          cors: true
   profile:
     handler: services/profile/main.handler
     events:
