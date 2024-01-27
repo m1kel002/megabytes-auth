@@ -8,9 +8,10 @@ class MegabytesStack(Stack):
                  **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         self.config = config
+        self.create_ddb_tables()
 
     def create_ddb_tables(self):
-        user_table = db.Table(
+        self.user_table = db.Table(
             self,
             id=f"{self.config.STACK_FAMILY}-users",
             table_name=f"{self.config.STACK_FAMILY}-users",
@@ -19,11 +20,11 @@ class MegabytesStack(Stack):
             sort_key=db.Attribute(name='category',
                                   type=db.AttributeType.STRING))
 
-        data_table = db.Table(
+        self.data_table = db.Table(
             self,
             id=f"{self.config.STACK_FAMILY}-data",
             table_name=f"{self.config.STACK_FAMILY}-data",
             partition_key=db.Attribute(name='id',
                                        type=db.AttributeType.STRING),
-            sort_key=db.AttributeType(name='category',
-                                      type=db.AttributeType.STRING))
+            sort_key=db.Attribute(name='category',
+                                  type=db.AttributeType.STRING))
