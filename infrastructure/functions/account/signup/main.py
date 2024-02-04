@@ -1,10 +1,11 @@
 import json
-from constants import config
+from infrastructure import config
 import boto3
+from infrastructure.shared_code.utils.main import make_response
 
 
 def handler(event, context):
-    print(f"Event signup triggered", json.dumps(event))
+    print(f"Event signup triggered: ", json.dumps(event))
     body = json.loads(event['body'])
 
     try:
@@ -37,13 +38,3 @@ def handler(event, context):
     except Exception as err:
         print(f"ERROR: {str(err)}")
         return make_response({'message': str(err)}, 500)
-
-def make_response(body: dict, code: int):
-    return {
-        'statusCode': code,
-        'body': json.dumps(body),
-        'headers': {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': True
-        }
-    }

@@ -1,6 +1,6 @@
 import json
 import boto3
-from constants.config import CLIENT_ID
+from infrastructure.config import CLIENT_ID
 
 
 def handler(event, context):

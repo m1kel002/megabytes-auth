@@ -6,8 +6,13 @@ provider:
   runtime: python3.8
   region: ap-southeast-1
   environment:
-    user_pool_id: { Ref: UserPool }
-    client_id: {Ref: UserClient }
+    USER_POOL_ID: { Ref: UserPool }
+    CLIENT_ID: {Ref: UserClient }
+    STAGE: ${env:STAGE}
+    REGION: ${env:REGION}
+    ACCOUNT_NAME: ${env:ACCOUNT_NAME}
+    STACK_FAMILY: ${env:STACK_FAMILY}
+    ACCOUNT_ID: ${env:ACCOUNT_ID}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -18,14 +23,18 @@ provider:
   
 functions:
   login:
-    handler: services/login/main.handler
+    handler: infrastructure/functions/account/login/main.handler
     events:
       - http:
           path: /login
           method: post
           cors: true
+    package:
+      include:
+        - infrastructure/functions/account/login/**
+        - infrastructure/shared_code/**
   profile:
-    handler: services/profile/main.handler
+    handler: infrastructure/functions/account/profile/main.handler
     events:
       - http:
           path: /profile
@@ -34,27 +43,43 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ecswr4
+    package:
+      include:
+        - infrastructure/functions/account/profile/**
+        - infrastructure/shared_code/**
   signup:
-    handler: services/signup/main.handler
+    handler: infrastructure/functions/account/signup/main.handler
     timeout: 30
     events:
       - http:
           path: /signup
           method: post
+    package:
+      include:
+        - infrastructure/functions/account/signup/**
+        - infrastructure/shared_code/**
   verifySignup:
-    handler: services/confirm_signup.handler
+    handler: infrastructure/functions/account/verify_signup/main.handler
     timeout: 30
     events:
       - http:
           path: /verify
           method: post
+    package:
+      include:
+        - infrastructure/functions/account/verify_signup/**
+        - infrastructure/shared_code/**
   resendVerification:
-    handler: services/resend_verification_code.handler
+    handler: infrastructure/functions/account/resend_verification/main.handler
     timeout: 30
     events:
       - http:
           path: /resend
           method: post
+    package:
+      include:
+        - infrastructure/functions/account/resend_verification/**
+        - infrastructure/shared_code/**
 
 resources:
   Resources:

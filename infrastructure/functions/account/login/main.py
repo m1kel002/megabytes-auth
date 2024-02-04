@@ -1,7 +1,7 @@
 import json
 import boto3
 from botocore.exceptions import ClientError
-from constants.config import USER_POOL_ID, CLIENT_ID
+from infrastructure.config import USER_POOL_ID, CLIENT_ID
 
 
 def handler(event, context):

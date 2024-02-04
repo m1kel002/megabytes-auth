@@ -1,6 +1,7 @@
 import json
 import boto3
-from constants.config import CLIENT_ID
+from infrastructure.config import CLIENT_ID
+from infrastructure.shared_code.utils.main import make_response
 
 
 def handler(event, context):
@@ -14,9 +15,8 @@ def handler(event, context):
                                           Username=username,
                                           ConfirmationCode=confirm_code)
         print(f"Confirm Signup success: {response}")
-        return dict(statusCode=200,
-                    body=json.dumps(
-                        dict(message='User signup successfully confirmed!')))
+        return make_response(
+            dict(message='User signup successfully confirmed!'), 200)
     except Exception as err:
         print(f"Confirm Signup failed: {str(err)}")
-        return dict(statusCode=500, body=json.dumps(dict(message=str(err))))
+        return make_response(dict(message=str(err)), 500)
