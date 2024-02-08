@@ -1,2 +1,3 @@
 boto3==1.33.6
 botocore==1.33.6
+pynamodb==6.0.0

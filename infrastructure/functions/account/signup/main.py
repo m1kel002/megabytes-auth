@@ -34,6 +34,7 @@ def handler(event, context):
         client = boto3.client('cognito-idp')
         response = client.sign_up(**kwargs)
         print(f"SIGNUP RESPONSE: {response}")
+        # TODO: add user data to users db table
         return make_response({'message': 'Successfully signed up!'}, 200)
     except Exception as err:
         print(f"ERROR: {str(err)}")
