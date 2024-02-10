@@ -20,7 +20,13 @@ provider:
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
       Resource: "*"
-  
+layers:
+  Megabytes:
+    path: lambda_layer
+    description: default megabytes lambda layer
+package:
+  patterns:
+    - python.zip
 functions:
   login:
     handler: infrastructure/functions/account/login/main.handler
@@ -58,6 +64,9 @@ functions:
       include:
         - infrastructure/functions/account/signup/**
         - infrastructure/shared_code/**
+    layers:
+      - {Ref: MegabytesLambdaLayer }
+    role: "arn:aws:iam::${self:provider.environment.ACCOUNT_ID}:role/${opt:stage}-megabytes-writerRole"
   verifySignup:
     handler: infrastructure/functions/account/verify_signup/main.handler
     timeout: 30

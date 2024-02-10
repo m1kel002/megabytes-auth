@@ -1,6 +1,6 @@
 from pynamodb.models import Model
-from pynamodb.attributes import UnicodeAttribute
-from config import STACK_FAMILY
+from pynamodb.attributes import UnicodeAttribute, UTCDateTimeAttribute
+from infrastructure.config import STACK_FAMILY
 
 
 class Entity(Model):
@@ -11,5 +11,6 @@ class Entity(Model):
 
     id = UnicodeAttribute(hash_key=True)
     category = UnicodeAttribute(range_key=True)
-    createdAt = UnicodeAttribute(null=True)
-    updatedAt = UnicodeAttribute(null=True)
+    createdAt = UTCDateTimeAttribute(null=True)
+    updatedAt = UTCDateTimeAttribute(null=True)
+    uniqueId = UnicodeAttribute(null=False)
