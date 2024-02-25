@@ -53,6 +53,9 @@ functions:
       include:
         - infrastructure/functions/account/profile/**
         - infrastructure/shared_code/**
+    layers:
+      - {Ref: MegabytesLambdaLayer}
+    role: "arn:aws:iam::${self:provider.environment.ACCOUNT_ID}:role/${opt:stage}-megabytes-readerRole"
   signup:
     handler: infrastructure/functions/account/signup/main.handler
     timeout: 30
@@ -60,6 +63,7 @@ functions:
       - http:
           path: /signup
           method: post
+          cors: true
     package:
       include:
         - infrastructure/functions/account/signup/**

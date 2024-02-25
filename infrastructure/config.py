@@ -15,3 +15,5 @@ ACCOUNT_NAME = get_env('ACCOUNT_NAME')
 REGION = get_env('REGION')
 STACK_FAMILY = get_env('STACK_FAMILY')
 ACCOUNT_ID = get_env('ACCOUNT_ID')
+REGION = 'ap-southeast-1'
+PROJECT_NAME = 'megabytes'

@@ -2,13 +2,15 @@ from pynamodb.attributes import UnicodeAttribute
 from infrastructure.shared_code.entities.entity import Entity
 from infrastructure.config import STACK_FAMILY
 import uuid
+from infrastructure.config import REGION
+from infrastructure.shared_code.entities.indexes.username import UsernameIndex
 
 
 class User(Entity):
 
     class Meta:
         table_name = f'{STACK_FAMILY}-users'
-        region = 'ap-southeast-1'
+        region = REGION
 
     username = UnicodeAttribute(null=True)
     firstName = UnicodeAttribute(null=True)
@@ -16,6 +18,9 @@ class User(Entity):
     gender = UnicodeAttribute(null=True)
     birthdate = UnicodeAttribute(null=True)
     email = UnicodeAttribute(null=True)
+
+    # indexes
+    usernameIndex = UsernameIndex()
 
     def category_name(self):
         return 'user'
