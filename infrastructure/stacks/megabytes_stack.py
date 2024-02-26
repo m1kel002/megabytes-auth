@@ -43,6 +43,18 @@ class MegabytesStack(Stack):
                                        type=db.AttributeType.STRING))
 
     def create_policies(self):
+        self.cognito_authenticator = aws_iam.ManagedPolicy(
+            self,
+            'CognitoAuthenticator',
+            managed_policy_name=f"{STACK_FAMILY}-CognitoAuthenticator",
+            statements=[
+                aws_iam.PolicyStatement(actions=[
+                    'cognito-idp:AdminInitiateAuth',
+                    'cognito-idp:AdminCreateUser',
+                    'cognito-idp:AdminSetUserPassword'
+                ],
+                                        resources=['*'])
+            ])
         self.dynamo_writer = aws_iam.ManagedPolicy(
             self,
             'DynamoWriter',
@@ -75,10 +87,10 @@ class MegabytesStack(Stack):
                     ])
             ])
 
-        self.logs = aws_iam.ManagedPolicy(
+        self.logger = aws_iam.ManagedPolicy(
             self,
             'LogsWriter',
-            managed_policy_name=f"{STACK_FAMILY}-Logs",
+            managed_policy_name=f"{STACK_FAMILY}-Logger",
             statements=[
                 aws_iam.PolicyStatement(
                     actions=[
@@ -93,16 +105,25 @@ class MegabytesStack(Stack):
             ])
 
     def create_roles(self):
+        self.cognito_authenticator_role = aws_iam.Role(
+            self,
+            'AuthenticatorRole',
+            role_name=f'{STACK_FAMILY}-authenticatorRole',
+            managed_policies=[
+                self.dynamo_reader, self.logger, self.cognito_authenticator
+            ],
+            assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'))
+
         self.writer_role = aws_iam.Role(
             self,
             'WriterRole',
             role_name=f"{STACK_FAMILY}-writerRole",
-            managed_policies=[self.dynamo_writer, self.logs],
+            managed_policies=[self.dynamo_writer, self.logger],
             assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'))
 
         self.reader_role = aws_iam.Role(
             self,
             'ReaderRole',
             role_name=f"{STACK_FAMILY}-readerRole",
-            managed_policies=[self.dynamo_reader, self.logs],
+            managed_policies=[self.dynamo_reader, self.logger],
             assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'))

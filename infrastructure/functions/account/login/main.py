@@ -2,6 +2,7 @@ import json
 import boto3
 from botocore.exceptions import ClientError
 from infrastructure.config import USER_POOL_ID, CLIENT_ID
+from infrastructure.shared_code.services.user_service import UserService
 
 
 def handler(event, context):
@@ -11,15 +12,20 @@ def handler(event, context):
         username = body['username']
         password = body['password']
         client = boto3.client('cognito-idp')
-        response = client.admin_initiate_auth(UserPoolId=USER_POOL_ID,
-                                              ClientId=CLIENT_ID,
-                                              AuthFlow='ADMIN_NO_SRP_AUTH',
-                                              AuthParameters={
-                                                  'USERNAME': username,
-                                                  'PASSWORD': password
-                                              })
-        print(f"login successful: {response}")
-        return make_response(json.dumps(response), 200)
+        auth_response = client.admin_initiate_auth(
+            UserPoolId=USER_POOL_ID,
+            ClientId=CLIENT_ID,
+            AuthFlow='ADMIN_NO_SRP_AUTH',
+            AuthParameters={
+                'USERNAME': username,
+                'PASSWORD': password
+            })
+        print(f"login successful: {auth_response}")
+        id_token = UserService.get_id_token(auth_response)
+        user = UserService.get_user_by_username(username)
+        user_info = UserService.to_simple_response(user)
+        user_info.update(dict(idToken=id_token))
+        return make_response(json.dumps(user_info), 200)
 
     except ClientError as ufe:
         print(f"User does not exist {str(ufe)}")

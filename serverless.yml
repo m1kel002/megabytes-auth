@@ -39,6 +39,9 @@ functions:
       include:
         - infrastructure/functions/account/login/**
         - infrastructure/shared_code/**
+    layers:
+      - {Ref: MegabytesLambdaLayer}
+    role: "arn:aws:iam::${self:provider.environment.ACCOUNT_ID}:role/${opt:stage}-megabytes-authenticatorRole"
   profile:
     handler: infrastructure/functions/account/profile/main.handler
     events:
