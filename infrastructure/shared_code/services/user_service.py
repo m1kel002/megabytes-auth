@@ -4,7 +4,7 @@ from infrastructure.shared_code.entities.user import User
 class UserService():
 
     @classmethod
-    def create(params: dict):
+    def create(cls, params: dict):
         user = User(**params)
         user.update_fields()
         user.save()
