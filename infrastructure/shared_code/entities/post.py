@@ -14,7 +14,7 @@ class Post(Entity):
     message = UnicodeAttribute(null=True)
     upvote = NumberAttribute(null=True, default=0)
     downvote = NumberAttribute(null=True, default=0)
-    author = Author(null=False)
+    createdById = UnicodeAttribute(null=True)
 
     def category_name(self):
         return 'post'
