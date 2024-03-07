@@ -7,6 +7,7 @@ class PostService():
 
     @classmethod
     def create(cls, params: dict) -> Post:
+        params.update(dict(upvote=0, downvote=0))
         post = Post(**params)
         post.update_fields()
         post.save()
@@ -22,7 +23,7 @@ class PostService():
                     message=entity.message,
                     upvote=entity.upvote,
                     downvote=entity.downvote,
-                    createdAt=entity.createdAt,
+                    createdAt=str(entity.createdAt),
                     author=cls.get_author_details(entity.createdById))
 
     @classmethod

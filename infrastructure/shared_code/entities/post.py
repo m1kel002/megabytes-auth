@@ -2,7 +2,7 @@ import uuid
 from pynamodb.attributes import UnicodeAttribute, NumberAttribute
 from infrastructure.shared_code.entities.entity import Entity
 from infrastructure.config import REGION, STACK_FAMILY
-from infrastructure.shared_code.entities.author import Author
+from infrastructure.shared_code.utils.main import now
 
 
 class Post(Entity):
@@ -24,3 +24,4 @@ class Post(Entity):
         self.uniqueId = id
         self.id = id
         self.category = self.category_name()
+        self.createdAt = now()

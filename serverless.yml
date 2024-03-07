@@ -96,6 +96,21 @@ functions:
       include:
         - infrastructure/functions/account/resend_verification/**
         - infrastructure/shared_code/**
+  createPost:
+    handler: infrastructure/functions/post/create/main.handler
+    events:
+      - http:
+          path: /post
+          method: post
+          cors: true
+    package:
+      include:
+        - infrastructure/functions/post/create/**
+        - infrastructure/shared_code/**
+    layers:
+      - { Ref: MegabytesLambdaLayer }
+    role: "arn:aws:iam::${self:provider.environment.ACCOUNT_ID}:role/${opt:stage}-megabytes-writerRole"
+      
 
 resources:
   Resources:

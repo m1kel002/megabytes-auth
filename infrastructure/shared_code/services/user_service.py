@@ -10,7 +10,7 @@ class UserService():
         user.save()
 
     @classmethod
-    def get(id: str):
+    def get(cls, id: str):
         return User.get(id, 'user')
 
     @classmethod
