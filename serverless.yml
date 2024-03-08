@@ -110,7 +110,20 @@ functions:
     layers:
       - { Ref: MegabytesLambdaLayer }
     role: "arn:aws:iam::${self:provider.environment.ACCOUNT_ID}:role/${opt:stage}-megabytes-writerRole"
-      
+  getPosts:
+    handler: infrastructure/functions/post/get_list/main.handler
+    events:
+      - http:
+          path: /post
+          method: get
+          cors: true
+    package:
+      include:
+        - infrastructure/functions/post/get_list/**
+        - infrastructure/shared_code/**
+    layers:
+      - { Ref: MegabytesLambdaLayer }
+    role: "arn:aws:iam::${self:provider.environment.ACCOUNT_ID}:role/${opt:stage}-megabytes-readerRole"
 
 resources:
   Resources:

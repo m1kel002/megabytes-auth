@@ -18,6 +18,10 @@ class PostService():
         return Post.get(id, Post.category_name())
 
     @classmethod
+    def get_posts(cls):
+        return list(Post.scan())
+
+    @classmethod
     def to_response(cls, entity: Post):
         return dict(id=entity.id,
                     message=entity.message,
